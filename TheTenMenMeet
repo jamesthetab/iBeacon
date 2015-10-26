@@ -1,0 +1,159 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# The Ten Men Meet\n",
+    "\n",
+    "## The problem\n",
+    "\n",
+    "This week we are going to look at a few different approaches to solving digit problems. \n",
+    "\n",
+    "$$THE + TEN + MEN = MEET$$\n",
+    "\n",
+    "is a famous example, where each of the letters represent a different non-zero digit.\n",
+    "\n",
+    "A traditional approach to this problem is to consider how much is carried from each column to the next - $0, 1, 2$ - being the only options. After a few pages of checking cases we find that there is a unique solution. This is important training in setting out logical arguments, but just as interesting is the use of computing to instantly check all the cases. Each of the $5$ letters have at most $10$ options, yieding $10^5$ cases to check, which takes just a fraction of a second with a modern computer.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "m,e,t,h,n =  0 0 0 0 0\n",
+      "m,e,t,h,n =  0 3 1 5 9\n",
+      "m,e,t,h,n =  0 3 1 6 4\n",
+      "m,e,t,h,n =  0 7 3 1 8\n",
+      "m,e,t,h,n =  0 7 3 2 3\n",
+      "m,e,t,h,n =  1 0 4 9 7\n",
+      "m,e,t,h,n =  1 4 6 5 6\n",
+      "m,e,t,h,n =  1 4 6 6 1\n",
+      "m,e,t,h,n =  1 8 8 1 5\n",
+      "m,e,t,h,n =  1 8 8 2 0\n",
+      "m,e,t,h,n =  2 1 9 8 9\n",
+      "m,e,t,h,n =  2 1 9 9 4\n"
+     ]
+    }
+   ],
+   "source": [
+    "# THE+TEN+MEN = MEET\n",
+    "# M,E,T,H,N digits \n",
+    "\n",
+    "m = 0\n",
+    "while m <= 9:\n",
+    "    e = 0\n",
+    "    while e <=9:\n",
+    "        t = 0\n",
+    "        while t <= 9:\n",
+    "            h = 0\n",
+    "            while h <= 9:\n",
+    "                n = 0\n",
+    "                while n <= 9:\n",
+    "                    if 100*t +10*h + e + 100*t+10*e+n +100*m +10*e +n == 1000*m +100*e + 10*e +t:\n",
+    "                        print \"m,e,t,h,n = \", m , e, t , h , n\n",
+    "                    n=n+1\n",
+    "                h = h+1\n",
+    "            t = t+1\n",
+    "        e = e+1\n",
+    "    m = m+1\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We can now go through the cases and dismiss most of them - $m=0$ is not a genuine $4$-digit solution; whilst other solutions have repeated digits. This only remaining case is:\n",
+    "\n",
+    "$$(m,e,t,h,n) = (1,0,4,9,7)$$\n",
+    "\n",
+    "i.e.\n",
+    "\n",
+    "$$490+407+107 = 1004$$\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "I find it interesting to contrast this approach with a colleague's tactic, who builds up a set of the values, and abandons the construction immediately if a digit is repeated."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "m e t h n =  1 0 4 9 7\n"
+     ]
+    }
+   ],
+   "source": [
+    "used = []\n",
+    "for m in range(1,10):\n",
+    "    if m not in used:\n",
+    "        used.append(m)\n",
+    "        for e in range(0,10):\n",
+    "            if e not in used:\n",
+    "                used.append(e)\n",
+    "                for t in range(0,10):\n",
+    "                    if t not in used:\n",
+    "                        used.append(t)\n",
+    "                        for h in range(0,10):\n",
+    "                            if h not in used:\n",
+    "                                used.append(h)\n",
+    "                                for n in range(0,10):\n",
+    "                                    if n not in used:\n",
+    "                                        if (100*t + 10*h + e) + (100*t + 10*e + n) + (100*m + 10*e + n) == (1000*m + 100*e + 10*e + t):\n",
+    "                                            print\"m e t h n = \", m, e, t, h, n\n",
+    "                                used.remove(h)\n",
+    "                        used.remove(t)\n",
+    "                used.remove(e)\n",
+    "        used.remove(m)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "You might like to consider the following problem which comes in especially handy once you move to university study:\n",
+    "\n",
+    "$$SEND + MORE = MONEY$$"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 2",
+   "language": "python",
+   "name": "python2"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 2
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython2",
+   "version": "2.7.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 0
+}
